@@ -52,6 +52,7 @@ if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
     scope: ['user:email']
     }, async (accessToken, refreshToken, profile, done) => {
     try {
+      console.log('GitHub Profile:', JSON.stringify(profile, null, 2));
 
       const email =
         profile.emails?.[0]?.value ||
