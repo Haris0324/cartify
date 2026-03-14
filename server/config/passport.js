@@ -62,8 +62,16 @@ if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
 
       if (user) {
         if (user.email.includes('@github.user') && email && !email.includes('@github.user')) {
-          user.email = email;
-          await user.save();
+          const existingRealUser = await User.findOne({ email });
+          if (existingRealUser && existingRealUser._id.toString() !== user._id.toString()) {
+            existingRealUser.githubId = profile.id;
+            await existingRealUser.save();
+            await User.findByIdAndDelete(user._id);
+            return done(null, existingRealUser);
+          } else {
+            user.email = email;
+            await user.save();
+          }
         }
         return done(null, user);
       }
