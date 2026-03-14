@@ -8,7 +8,7 @@ export function CartProvider({ children }) {
   const { user } = useAuth();
   const [cart, setCart] = useState({ items: [] });
   const [loading, setLoading] = useState(false);
-  const sessionId = localStorage.getItem('cartSessionId') || crypto.randomUUID();
+  const sessionId = localStorage.getItem('cartSessionId') || Math.random().toString(36).substring(2, 9);
 
   useEffect(() => {
     if (!localStorage.getItem('cartSessionId')) {
