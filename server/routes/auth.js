@@ -138,6 +138,7 @@ router.post('/reset-password', [
     user.password = req.body.password;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
+    user.passwordChangedAt = Date.now() - 1000;
     await user.save();
     res.cookie('token', '', { ...cookieOptions, maxAge: 0 });
     res.json({ message: 'Password reset successful. Please log in again.' });

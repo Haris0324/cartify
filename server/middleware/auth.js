@@ -10,6 +10,14 @@ exports.protect = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'cartify_secret');
     req.user = await User.findById(decoded.id);
     if (!req.user) return res.status(401).json({ message: 'User not found' });
+
+    if (req.user.passwordChangedAt) {
+      const changedTimestamp = parseInt(req.user.passwordChangedAt.getTime() / 1000, 10);
+      if (decoded.iat < changedTimestamp) {
+        return res.status(401).json({ message: 'Password recently changed. Please log in again.' });
+      }
+    }
+
     next();
   } catch (err) {
     res.status(401).json({ message: 'Invalid token' });
