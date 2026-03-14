@@ -4,9 +4,12 @@ import api from '../api/axios';
 import toast from 'react-hot-toast';
 import styles from './Auth.module.css';
 
+import { useAuth } from '../context/AuthContext';
+
 export default function ResetPassword() {
   const { token } = useParams();
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [loading, setLoading] = useState(false);
@@ -24,7 +27,8 @@ export default function ResetPassword() {
     setLoading(true);
     try {
       await api.post('/auth/reset-password', { token, password });
-      toast.success('Password reset! Sign in with your new password.');
+      await logout();
+      toast.success('Password reset! Please sign in with your new password.');
       navigate('/login');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Invalid or expired link');
