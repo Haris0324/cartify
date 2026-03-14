@@ -60,7 +60,13 @@ if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
 
       let user = await User.findOne({ githubId: profile.id });
 
-      if (user) return done(null, user);
+      if (user) {
+        if (user.email.includes('@github.user') && email && !email.includes('@github.user')) {
+          user.email = email;
+          await user.save();
+        }
+        return done(null, user);
+      }
 
       user = await User.findOne({ email });
 
