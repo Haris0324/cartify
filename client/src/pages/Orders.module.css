@@ -1,0 +1,62 @@
+.page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.page h1 {
+  font-family: var(--font-display);
+  margin-bottom: 2rem;
+}
+
+.empty {
+  color: var(--text-muted);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card {
+  display: block;
+  padding: 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color 0.2s;
+}
+
+.card:hover {
+  border-color: var(--accent);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.header span:first-child {
+  font-weight: 600;
+}
+
+.pending { color: var(--warning); }
+.paid { color: var(--success); }
+.shipped { color: var(--accent); }
+.delivered { color: var(--success); }
+.cancelled { color: var(--error); }
+
+.items {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
