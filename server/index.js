@@ -3,6 +3,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const path = require('path');
+
 require('dotenv').config();
 require('./config/passport');
 
@@ -17,7 +18,7 @@ const wishlistRoutes = require('./routes/wishlist');
 
 const app = express();
 
-// Stripe webhook needs raw body - must be before express.json()
+// Stripe webhook needs raw body
 app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
 
 // Middleware
@@ -43,17 +44,18 @@ app.use('/api/wishlist', wishlistRoutes);
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
-// Serve React Frontend (Production)
+// Serve React Frontend
 
-const __dirnamePath = path.resolve();
+const clientPath = path.join(__dirname, '..', 'client', 'dist');
 
-app.use(express.static(path.join(__dirnamePath, '../client/dist')));
+app.use(express.static(clientPath));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirnamePath, '../client/dist/index.html'));
+  res.sendFile(path.join(clientPath, 'index.html'));
 });
 
-// MongoDB Connection
+// MongoDB
+
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/cartify')
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
