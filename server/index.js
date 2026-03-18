@@ -44,15 +44,14 @@ app.use('/api/wishlist', wishlistRoutes);
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
-// Serve React Frontend
+// Serve React Frontend: runs frontend and backend on the same route:
+// const clientPath = path.join(__dirname, '..', 'client', 'dist');
 
-const clientPath = path.join(__dirname, '..', 'client', 'dist');
+// app.use(express.static(clientPath));
 
-app.use(express.static(clientPath));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(clientPath, 'index.html'));
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(clientPath, 'index.html'));
+// });
 
 // MongoDB
 

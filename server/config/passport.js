@@ -3,7 +3,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
 const User = require('../models/User');
 
-const BASE_URL = "http://13.53.39.196:5000";
+const BASE_URL = process.env.SERVER_URL;
 
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   passport.use(new GoogleStrategy({
@@ -48,7 +48,7 @@ if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
     passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "http://13.53.39.196:5000/api/auth/github/callback",
+    callbackURL: `${BASE_URL}/api/auth/github/callback`,
     scope: ['user:email']
     }, async (accessToken, refreshToken, profile, done) => {
     try {
