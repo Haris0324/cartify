@@ -23,10 +23,7 @@ app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
 
 // Middleware
 app.use(cors({
-  origin: [
-    "http://localhost:3000", 
-    "https://cartify-frontend-khaki.vercel.app"
-  ],
+  origin: process.env.CLIENT_URL,
   credentials: true
 }));
 

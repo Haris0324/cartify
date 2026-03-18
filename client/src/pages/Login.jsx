@@ -37,7 +37,8 @@ export default function Login() {
   };
 
   const handleOAuth = (provider) => {
-    window.location.href = `/api/auth/${provider}`;
+    const API = import.meta.env.VITE_API_URL || '';
+    window.location.href = `${API}/api/auth/${provider}`;
   };
 
   useEffect(() => {
