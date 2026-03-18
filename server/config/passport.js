@@ -3,7 +3,12 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
 const User = require('../models/User');
 
-const BASE_URL = process.env.SERVER_URL;
+let BASE_URL = (process.env.SERVER_URL || process.env.VITE_API_URL || 'https://cartify-backend-go9q.onrender.com').replace(/\/$/, '');
+
+// Force https for production Render URLs to prevent redirect_uri_mismatch
+if (BASE_URL.includes('onrender.com') && BASE_URL.startsWith('http:')) {
+  BASE_URL = BASE_URL.replace('http:', 'https:');
+}
 
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   passport.use(new GoogleStrategy({

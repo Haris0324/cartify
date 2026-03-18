@@ -18,6 +18,9 @@ const wishlistRoutes = require('./routes/wishlist');
 
 const app = express();
 
+// Trust proxy for production (essential for HTTPS redirects on Render)
+app.set('trust proxy', 1);
+
 // Stripe webhook needs raw body
 app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
 
