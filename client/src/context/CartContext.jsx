@@ -49,13 +49,15 @@ export function CartProvider({ children }) {
   };
 
   const updateQuantity = async (itemId, quantity) => {
-    const { data } = await api.put(`/cart/${itemId}`, { quantity });
+    const headers = user ? {} : { 'x-session-id': sessionId };
+    const { data } = await api.put(`/cart/${itemId}`, { quantity }, { headers });
     setCart(data);
     return data;
   };
 
   const removeFromCart = async (itemId) => {
-    const { data } = await api.delete(`/cart/${itemId}`);
+    const headers = user ? {} : { 'x-session-id': sessionId };
+    const { data } = await api.delete(`/cart/${itemId}`, { headers });
     setCart(data);
     return data;
   };
