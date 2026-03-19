@@ -121,7 +121,7 @@ export default function Checkout() {
             <>
               <section className={styles.section}>
                 <h3>Shipping Address</h3>
-                <div className={styles.form}>
+                <form className={styles.form} onSubmit={(e) => { e.preventDefault(); handleCreateOrder(); }}>
                   <input placeholder="Full Name" value={address.name} onChange={(e) => setAddress(a => ({ ...a, name: e.target.value }))} required />
                   <input placeholder="Street" value={address.street} onChange={(e) => setAddress(a => ({ ...a, street: e.target.value }))} required />
                   <div className={styles.row}>
@@ -131,9 +131,9 @@ export default function Checkout() {
                   </div>
                   <input placeholder="Country" value={address.country} onChange={(e) => setAddress(a => ({ ...a, country: e.target.value }))} />
                   <input placeholder="Phone" value={address.phone} onChange={(e) => setAddress(a => ({ ...a, phone: e.target.value }))} />
-                </div>
+                  <button type="submit" className={styles.continueBtn}>Continue to Payment</button>
+                </form>
               </section>
-              <button className={styles.continueBtn} onClick={handleCreateOrder}>Continue to Payment</button>
             </>
           ) : clientSecret && stripePromise ? (
             <Elements stripe={stripePromise} options={{ clientSecret }}>
