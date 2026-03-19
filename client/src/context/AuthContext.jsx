@@ -4,7 +4,13 @@ import api from '../api/axios';
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
+  const [user, setUser] = useState(() => {
+    const saved = JSON.parse(localStorage.getItem('user'));
+    if (saved?.token) {
+      api.defaults.headers.common['Authorization'] = `Bearer ${saved.token}`;
+    }
+    return saved || null;
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
