@@ -43,9 +43,12 @@ export default function Login() {
 
   useEffect(() => {
     const err = searchParams.get('error');
+    const expired = searchParams.get('expired');
+
     if (err === 'oauth_failed') {
-      const msg = 'OAuth login failed. Ensure Google/GitHub OAuth is configured in .env';
-      setError(msg);
+      setError('OAuth login failed. Ensure Google/GitHub OAuth is configured in .env');
+    } else if (expired === 'true') {
+      setError('You have been logged out due to inactivity.');
     }
   }, [searchParams]);
 
