@@ -48,7 +48,7 @@ export default function Login() {
     if (err === 'oauth_failed') {
       setError('OAuth login failed. Ensure Google/GitHub OAuth is configured in .env');
     } else if (expired === 'true') {
-      setError('You have been logged out due to inactivity.');
+      setError('You have been logged out');
     }
   }, [searchParams]);
 

@@ -27,13 +27,12 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // Absolute Session Timeout (Set to 50000ms for testing, change to 3 * 60 * 60 * 1000 for 3 hours later)
+  // Absolute Session Timeout (3 Hours = 10800000 ms)
   useEffect(() => {
     if (!user) return; // Only track session when logged in
 
-    const TIMEOUT_MS = 50000; 
+    const TIMEOUT_MS = 3 * 60 * 60 * 1000; 
 
-    // Get when the session started, or set it now if it's a new login
     let sessionStart = parseInt(localStorage.getItem('cartify_session_start') || '0', 10);
     if (!sessionStart) {
       sessionStart = Date.now();
@@ -47,18 +46,17 @@ export function AuthProvider({ children }) {
       });
     };
 
-    // Check immediately on mount in case they refreshed after timeout
     if (Date.now() - sessionStart > TIMEOUT_MS) {
       handleLogout();
       return;
     }
 
-    // Check every 5 seconds securely in the background
+    // Check every minute in the background
     const checkSession = setInterval(() => {
       if (Date.now() - sessionStart > TIMEOUT_MS) {
         handleLogout();
       }
-    }, 5000); 
+    }, 60000); 
 
     return () => clearInterval(checkSession);
   }, [user]);
