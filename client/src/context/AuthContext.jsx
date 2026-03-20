@@ -95,10 +95,15 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
-    await api.post('/auth/logout');
-    setUser(null);
-    delete api.defaults.headers.common['Authorization'];
-    localStorage.removeItem('user');
+    try {
+      await api.post('/auth/logout');
+    } catch (error) {
+      console.error('Backend logout failed:', error);
+    } finally {
+      setUser(null);
+      delete api.defaults.headers.common['Authorization'];
+      localStorage.removeItem('user');
+    }
   };
 
   return (
