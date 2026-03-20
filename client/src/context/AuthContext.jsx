@@ -27,55 +27,40 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // Inactivity Timeout Logic (3 Hours = 10800000ms)
+  // Absolute Session Timeout (Set to 50000ms for testing, change to 3 * 60 * 60 * 1000 for 3 hours later)
   useEffect(() => {
-    if (!user) return; // Only track activity when logged in
+    if (!user) return; // Only track session when logged in
 
-    const TIMEOUT_MS = 3 * 60 * 60 * 1000;
-    
-    const updateActivity = () => {
-      localStorage.setItem('cartify_last_activity', Date.now().toString());
-    };
+    const TIMEOUT_MS = 50000; 
+
+    // Get when the session started, or set it now if it's a new login
+    let sessionStart = parseInt(localStorage.getItem('cartify_session_start') || '0', 10);
+    if (!sessionStart) {
+      sessionStart = Date.now();
+      localStorage.setItem('cartify_session_start', sessionStart.toString());
+    }
 
     const handleLogout = () => {
       logout().finally(() => {
-        localStorage.removeItem('cartify_last_activity');
+        localStorage.removeItem('cartify_session_start');
         window.location.href = '/login?expired=true';
       });
     };
 
-    // Check if we already expired while the page was closed/refreshing
-    const prevActivity = parseInt(localStorage.getItem('cartify_last_activity') || Date.now().toString(), 10);
-    if (Date.now() - prevActivity > TIMEOUT_MS) {
+    // Check immediately on mount in case they refreshed after timeout
+    if (Date.now() - sessionStart > TIMEOUT_MS) {
       handleLogout();
       return;
     }
 
-    // Initialize activity immediately since we just loaded
-    updateActivity();
-
-    // Debounce activity updates to save performance
-    let debounceTimer;
-    const handleActivity = () => {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(updateActivity, 1000);
-    };
-
-    const events = ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'];
-    events.forEach(e => window.addEventListener(e, handleActivity, { passive: true }));
-
-    const checkInactivity = setInterval(() => {
-      const lastActivity = parseInt(localStorage.getItem('cartify_last_activity') || '0', 10);
-      if (Date.now() - lastActivity > TIMEOUT_MS) {
+    // Check every 5 seconds securely in the background
+    const checkSession = setInterval(() => {
+      if (Date.now() - sessionStart > TIMEOUT_MS) {
         handleLogout();
       }
-    }, 10000); // Check every 10 seconds for more accurate testing
+    }, 5000); 
 
-    return () => {
-      clearTimeout(debounceTimer);
-      clearInterval(checkInactivity);
-      events.forEach(e => window.removeEventListener(e, handleActivity));
-    };
+    return () => clearInterval(checkSession);
   }, [user]);
 
   const login = async (email, password) => {
@@ -103,6 +88,7 @@ export function AuthProvider({ children }) {
       setUser(null);
       delete api.defaults.headers.common['Authorization'];
       localStorage.removeItem('user');
+      localStorage.removeItem('cartify_session_start');
     }
   };
 
