@@ -37,7 +37,21 @@ export function AuthProvider({ children }) {
       localStorage.setItem('cartify_last_activity', Date.now().toString());
     };
 
-    // Initialize activity immediately
+    const handleLogout = () => {
+      logout().finally(() => {
+        localStorage.removeItem('cartify_last_activity');
+        window.location.href = '/login?expired=true';
+      });
+    };
+
+    // Check if we already expired while the page was closed/refreshing
+    const prevActivity = parseInt(localStorage.getItem('cartify_last_activity') || Date.now().toString(), 10);
+    if (Date.now() - prevActivity > TIMEOUT_MS) {
+      handleLogout();
+      return;
+    }
+
+    // Initialize activity immediately since we just loaded
     updateActivity();
 
     // Debounce activity updates to save performance
@@ -53,12 +67,9 @@ export function AuthProvider({ children }) {
     const checkInactivity = setInterval(() => {
       const lastActivity = parseInt(localStorage.getItem('cartify_last_activity') || '0', 10);
       if (Date.now() - lastActivity > TIMEOUT_MS) {
-        logout().finally(() => {
-          localStorage.removeItem('cartify_last_activity');
-          window.location.href = '/login?expired=true';
-        });
+        handleLogout();
       }
-    }, 60000); // Check every minute
+    }, 10000); // Check every 10 seconds for more accurate testing
 
     return () => {
       clearTimeout(debounceTimer);
