@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+
+  mongo:
+    image: mongo
+    container_name: mongo_pipeline
+    volumes:
+      - mongo-data-pipeline:/data/db
+    ports:
+      - "27018:27017"
+
+  backend:
+    image: harisn8n/backend
+    container_name: backend_pipeline
+    ports:
+      - "5001:5000"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - mongo
+
+  frontend:
+    image: harisn8n/frontend
+    container_name: frontend_pipeline
+    ports:
+      - "5174:5173"
+    volumes:
+      - ./client:/app
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data-pipeline:
