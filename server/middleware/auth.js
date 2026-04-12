@@ -22,7 +22,7 @@ exports.protect = async (req, res, next) => {
   } catch (err) {
     res.status(401).json({ message: 'Invalid token' });
   }
-};
+
 
 exports.admin = (req, res, next) => {
   if (req.user?.role !== 'admin') {
