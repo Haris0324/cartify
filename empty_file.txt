@@ -1,5 +1,5 @@
 Empty file content 
 updated content added content
-checking the jenkins updated
+checking the jenkins
 updating the file updated_done
 jenkins configured success.
