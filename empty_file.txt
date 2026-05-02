@@ -4,3 +4,4 @@ checking the jenkins updated
 updating the file updated_done
 jenkins configured success found success.
 done
+hello world
