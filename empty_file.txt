@@ -2,4 +2,4 @@ Empty file content
 updated content added content
 checking the jenkins updated
 updating the file
-jenkins configured successfully.
+jenkins configured successfully
