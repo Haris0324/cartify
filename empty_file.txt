@@ -2,5 +2,5 @@ Empty file content
 updated content added content
 checking the jenkins
 updating the file updated_done
-jenkins configured success.
+jenkins igured success.
 hello -
